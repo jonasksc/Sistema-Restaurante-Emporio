@@ -1,0 +1,11 @@
+{
+  "name": "emporio-cachoeira-sistema",
+  "version": "1.0.0",
+  "description": "Sistema de restaurante com banco de dados SQLite",
+  "main": "server.js",
+  "bin": "server.js",
+  "scripts": { "start": "node server.js", "build": "pkg . --targets node22-win-x64 --output dist/Emporio-Cachoeira.exe" },
+  "pkg": { "assets": ["public/**/*", "lib/*"] },
+  "dependencies": { "sql.js": "^1.10.3" },
+  "devDependencies": { "@yao-pkg/pkg": "^6.0.0", "jspdf": "2.5.1" }
+}

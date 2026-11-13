@@ -1,0 +1,30 @@
+COMO ATUALIZAR O SISTEMA (sem perder nenhum dado)
+==================================================
+
+1. FECHE o sistema (feche a janela preta).
+2. Faça uma cópia de segurança: copie a pasta "dados" para um pen drive ou para o Google Drive.
+3. Extraia este zip (Emporio-ATUALIZACAO.zip) e copie os arquivos para dentro da pasta do sistema,
+   escolhendo "Substituir os arquivos no destino":
+
+     server.js
+     resetar-senha.bat
+     public\index.html          (a pasta "public" já existe: substitua só o index.html)
+     DOCUMENTACAO-DO-SISTEMA.txt
+
+4. NÃO mexa na pasta "dados" nem na pasta "node_modules".
+5. Dê dois cliques em iniciar.bat. Aperte Ctrl+F5 no navegador para carregar a tela nova.
+
+O que mudou nesta versão:
+ - Botão para remover mesas.
+ - Abas separadas de Cardápio e Estoque (com "Dar entrada" de mercadoria).
+ - Senha de acesso (PIN), criada na aba Ajustes, pedida só no Caixa, Fechamento do dia e Excluir.
+ - Fechamento de caixa por dia (com conferência do dinheiro e PDF).
+ - Só os meses recentes são carregados; os antigos são buscados quando você escolhe o mês.
+ - Hora de virada do dia (para quem funciona depois da meia-noite), em Ajustes.
+
+Se algo der errado, feche o sistema, volte os arquivos antigos e a pasta "dados" da cópia de segurança.
+ - (Última versão) A senha agora é pedida só nas partes financeiras: Caixa, Fechamento do dia e Excluir.
+   Em Ajustes, o "Dia de trabalho" mostra a data e a hora do computador.
+ - (Versão com troco) Ao pagar em DINHEIRO, digite o valor recebido: o sistema mostra o troco,
+   imprime no cupom e guarda na venda. O banco antigo é atualizado sozinho na primeira abertura,
+   sem perder nenhuma venda.

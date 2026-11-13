@@ -1,0 +1,379 @@
+﻿================================================================================
+  EMPÓRIO CACHOEIRA DO SALTO - SISTEMA DO RESTAURANTE
+  Documentação completa (guarde este arquivo dentro da pasta do sistema)
+================================================================================
+
+ÍNDICE
+  1. O que é este sistema
+  2. Como abrir o sistema (dia a dia)
+  3. O que cada aba faz
+  4. Cupom e conferência em PDF
+  5. ONDE FICAM OS DADOS e como fazer BACKUP (leia com atenção!)
+  6. Usar no celular ou tablet (pelo Wi-Fi)
+  7. Instalar em outro computador
+  8. Problemas comuns e soluções
+  9. Cuidados importantes
+ 10. Arquivos da pasta do sistema
+ 11. Como mudar nome ou CNPJ do cupom
+ 12. O que foi feito até agora (histórico)
+ 13. O que o sistema AINDA NÃO faz / ideias para o futuro
+
+
+--------------------------------------------------------------------------------
+1. O QUE É ESTE SISTEMA
+--------------------------------------------------------------------------------
+Um sistema de CONTROLE do restaurante, que roda no navegador (Edge, Chrome etc.)
+do computador do restaurante. Ele controla:
+
+  - Mesas e pedidos (lançar itens, ver o total de cada mesa)
+  - Estoque de produtos (com baixa automática a cada venda)
+  - Registro dos pagamentos (apenas como INFORMAÇÃO)
+  - Caixa do dia e resumo do mês
+  - Impressão do cupom/conferência em PDF no tamanho de bobina (80 mm)
+
+IMPORTANTE:
+  - O sistema NÃO cobra o cliente. O pagamento é feito na maquininha, e o
+    sistema apenas registra a forma de pagamento (crédito, débito, Pix, dinheiro).
+  - O cupom que ele gera NÃO É DOCUMENTO FISCAL (não é nota fiscal). Isso está
+    escrito no próprio papel.
+  - Os dados ficam guardados no PRÓPRIO computador, em um banco de dados (SQLite).
+    Não depende de internet nem de conta de nenhum serviço.
+
+
+--------------------------------------------------------------------------------
+2. COMO ABRIR O SISTEMA (DIA A DIA)
+--------------------------------------------------------------------------------
+  1. Dê dois cliques no arquivo  iniciar.bat  (dentro da pasta do sistema).
+  2. Abre uma JANELA PRETA. Ela mostra o endereço do sistema.
+     >>> NÃO FECHE ESSA JANELA enquanto o restaurante estiver funcionando. <<<
+     Se fechar, o sistema para de funcionar.
+  3. O navegador abre sozinho em  http://localhost:3000
+     (se não abrir, abra o navegador e digite esse endereço).
+  4. No topo da página deve aparecer: "Salvo no banco de dados do restaurante".
+
+Para ENCERRAR no fim do dia: feche a aba do navegador e depois a janela preta.
+No dia seguinte, dê dois cliques em iniciar.bat de novo. Nada se perde.
+
+Dica: crie um atalho do iniciar.bat na Área de Trabalho (botão direito no arquivo,
+"Enviar para", "Área de trabalho").
+
+Primeira vez em um computador: o iniciar.bat precisa de INTERNET para instalar o
+que falta (demora um pouco). Nas próximas vezes abre direto, até sem internet.
+
+
+--------------------------------------------------------------------------------
+3. O QUE CADA ABA FAZ
+--------------------------------------------------------------------------------
+
+INÍCIO
+  Resumo do dia: valor vendido hoje, mesas ocupadas e produtos com estoque baixo.
+
+MESAS  (livre, sem senha - é a aba do dia a dia)
+  - Clique em uma mesa para abri-la e toque nos produtos para lançar os itens.
+  - Use + e - para ajustar as quantidades.
+  - "Adicionar mesa" cria uma mesa nova. "Remover mesa" (dentro da mesa escolhida)
+    tira a mesa da tela; só é possível se ela estiver sem itens lançados.
+  - "Conferência em PDF": gera o papel para mostrar a conta ao cliente. NÃO fecha a
+    mesa e NÃO registra venda.
+  - Escolha a forma de pagamento (a que o cliente usou na maquininha) e clique em
+    "Fechar mesa e gerar cupom em PDF": registra a venda, dá baixa no estoque,
+    libera a mesa e gera o cupom em PDF.
+  - TROCO: se a forma de pagamento for "Dinheiro", aparece o campo "Valor recebido do
+    cliente". Digite quanto o cliente entregou (ou use "Valor exato", R$ 10, 20, 50 ou
+    100) e o sistema mostra na hora o "Troco a devolver" (ou quanto ainda falta).
+    Se o valor for menor que o total, o sistema não deixa fechar a mesa.
+    Ao fechar, o cupom em PDF traz "Valor recebido" e "Troco", e uma mensagem na tela
+    avisa quanto devolver. Se o campo ficar vazio, a venda fecha normalmente, sem troco.
+  - "Cancelar pedido": apaga os itens da mesa (sem registrar venda).
+  - Se um produto estiver sem estoque, o botão dele fica bloqueado.
+
+CARDÁPIO
+  - Edite o nome e o preço de cada produto, remova produtos e cadastre produtos novos.
+  - Os produtos que vêm de exemplo (prato feito, refrigerante etc.) são só para
+    teste: troque pelo cardápio real.
+
+ESTOQUE
+  - Mostra quanto há de cada produto, o estoque mínimo e avisa quando está "baixo".
+  - "Dar entrada": quando chegar mercadoria, digite a quantidade e clique em
+    "Adicionar" (soma ao que já existe).
+  - Para corrigir um número errado, edite direto em "Em estoque".
+  - "Parar de controlar" / "Controlar estoque": produtos sem controle de quantidade
+    (ex.: suco feito na hora) não baixam estoque.
+
+CAIXA (visão do MÊS)
+  - Escolha o MÊS no seletor. Mostra o total vendido, o total por forma de
+    pagamento, os produtos mais vendidos e a lista de todas as vendas do mês.
+  - Cada venda tem o botão "PDF" para reimprimir o cupom. Nas vendas em dinheiro
+    aparecem o valor recebido e o troco.
+  - "Baixar planilha (CSV)": baixa as vendas do mês para abrir no Excel (com colunas
+    de valor recebido e troco).
+  - O sistema carrega sozinho só o mês atual e o anterior. Ao escolher um mês mais
+    antigo, ele busca as vendas daquele mês no banco (leva um instante).
+
+FECHAMENTO DO DIA
+  - Escolha o dia (ou use as setas) e veja: total vendido, quantidade de vendas,
+    ticket médio, valor por forma de pagamento, produtos vendidos e as vendas do dia.
+  - "Conferência do dinheiro da gaveta": digite o troco inicial e o dinheiro contado.
+    O sistema calcula o esperado (troco + vendas em dinheiro) e mostra a diferença.
+  - Mostra o troco devolvido aos clientes no dia. O valor das vendas em dinheiro já é
+    líquido de troco, então a conferência da gaveta continua a mesma conta.
+  - "Baixar fechamento em PDF": gera o resumo em papel de 80 mm.
+  - Se o restaurante funciona depois da meia-noite, configure em Ajustes a hora em
+    que o dia começa (ex.: 5h). Assim a madrugada conta no dia anterior.
+
+EXCLUIR
+  - Use quando uma venda foi finalizada por engano.
+  - Escolha o mês, clique em "Excluir" na linha da venda e confirme.
+  - O sistema pergunta se os itens devem VOLTAR AO ESTOQUE.
+  - A exclusão é DEFINITIVA (a venda some do caixa e dos relatórios).
+
+AJUSTES
+  - Senha de acesso: criar, trocar ou remover (veja abaixo).
+  - Dia de trabalho: mostra a DATA E HORA DO COMPUTADOR (relógio ao vivo) e o dia de
+    vendas atual. O sistema usa o relógio do computador para registrar cada venda.
+    Se a data/hora estiverem erradas, corrija no Windows. Você pode escolher a hora
+    em que o dia de vendas começa (padrão: meia-noite).
+  - Cópia de segurança: baixa o arquivo do banco de dados.
+
+SENHA DE ACESSO (PIN de 4 a 8 números)
+  - Crie em Ajustes. Depois disso, a senha é pedida SÓ nas partes financeiras:
+    CAIXA, FECHAMENTO DO DIA e EXCLUIR (que mostra e apaga vendas).
+  - Ficam LIVRES, sem senha: Início, Mesas, Cardápio, Estoque e Ajustes.
+    Na tela Início, o valor "vendido hoje" aparece como "Protegido" até digitar a senha.
+  - Lançar pedidos e fechar mesas NÃO exigem senha (os funcionários trabalham normal).
+  - Para TROCAR ou REMOVER a senha, ou mudar a hora do dia de vendas, o sistema pede
+    a senha atual.
+  - O histórico de vendas, a exclusão de vendas e o backup são protegidos também no
+    servidor, não só na tela.
+  - Botão "Bloquear" (no menu) trava na hora. O sistema também trava sozinho após
+    10 minutos sem uso.
+  - Depois de 5 senhas erradas seguidas, o sistema espera 30 segundos.
+  - ESQUECEU A SENHA? Feche a janela preta do sistema e dê dois cliques em
+    resetar-senha.bat (na pasta do sistema). Depois abra o sistema e crie outra senha.
+    (Quem tem acesso à pasta do computador consegue resetar: guarde o computador
+    em local seguro.)
+
+
+--------------------------------------------------------------------------------
+4. CUPOM E CONFERÊNCIA EM PDF
+--------------------------------------------------------------------------------
+  - O PDF sai com 80 mm de largura (padrão de impressora térmica) e a altura
+    se ajusta à quantidade de itens.
+  - Cabeçalho: EMPÓRIO RESTAURANTE CACHOEIRA e o CNPJ.
+  - Traz mesa, data e hora, itens (quantidade, valor unitário e subtotal),
+    total e, no cupom de venda fechada, a forma de pagamento.
+  - O navegador baixa o arquivo na pasta DOWNLOADS. Abra o PDF e imprima.
+  - AO IMPRIMIR: escolha a impressora térmica e deixe a escala em 100% (tamanho
+    real). Não use "ajustar à página", senão o papel sai cortado ou pequeno.
+  - Arquivos: "conferencia-mesa-N-..." (antes de fechar) e "cupom-mesa-N-..."
+    (venda fechada).
+
+
+--------------------------------------------------------------------------------
+5. ONDE FICAM OS DADOS E COMO FAZER BACKUP  (MUITO IMPORTANTE)
+--------------------------------------------------------------------------------
+Dentro da pasta do sistema existe a pasta  "dados":
+
+  dados\restaurante.db   = O BANCO DE DADOS. Tem cardápio, estoque, mesas abertas
+                           e TODAS as vendas. É o arquivo mais importante.
+  dados\backups\         = cópia automática de cada dia (guarda as últimas 60).
+
+Quanto tempo os dados ficam salvos? Para sempre (1 ano, 5 anos...). O arquivo
+não tem prazo de validade, e fechar o sistema ou desligar o computador não apaga nada.
+
+O QUE PODE FAZER VOCÊ PERDER DADOS:
+  - O HD/SSD do computador estragar, o computador ser formatado ou roubado.
+  - Alguém apagar a pasta "dados" sem querer.
+  - A pasta dados\backups NÃO protege contra isso, pois está no mesmo computador.
+
+COMO FAZER BACKUP (faça toda semana):
+  1. Feche o sistema (janela preta).
+  2. Copie a pasta inteira "dados" para um PENDRIVE ou para o GOOGLE DRIVE.
+  3. No fim de cada mês, guarde uma cópia com o nome do mês (ex.: dados-2026-11)
+     e NÃO apague essas cópias mensais.
+  Alternativa rápida: no rodapé do sistema há o link "Baixar cópia do banco de
+  dados", que baixa o restaurante.db.
+
+COMO RESTAURAR UM BACKUP:
+  1. Feche o sistema.
+  2. Substitua o arquivo dados\restaurante.db pela cópia que você guardou
+     (ou pelo arquivo de uma data dentro de dados\backups, renomeando-o para
+     restaurante.db).
+  3. Abra o sistema de novo.
+
+
+--------------------------------------------------------------------------------
+6. USAR NO CELULAR OU TABLET (PELO WI-FI)
+--------------------------------------------------------------------------------
+  1. Com o sistema aberto no computador, olhe a janela preta. Aparece uma linha:
+        Outros aparelhos (Wi-Fi): http://192.168.x.x:3000
+  2. No celular/tablet, conectado AO MESMO Wi-Fi, abra o navegador e digite
+     exatamente esse endereço.
+  3. Se não abrir: o Firewall do Windows pode estar bloqueando. Na primeira vez
+     ele pergunta; marque "Redes particulares" e permita.
+  4. O número do endereço (192.168...) pode mudar. Para ficar fixo, peça a quem
+     cuida do roteador para fixar o IP do computador.
+  O computador com o sistema precisa ficar LIGADO com a janela preta aberta.
+
+
+--------------------------------------------------------------------------------
+7. INSTALAR EM OUTRO COMPUTADOR
+--------------------------------------------------------------------------------
+  1. Instale o Node.js (nodejs.org), versão LTS, clicando em "Next" em tudo.
+  2. Copie a pasta inteira do sistema para o outro computador
+     (ou extraia o arquivo Emporio-codigo-fonte.zip).
+  3. Para LEVAR OS DADOS: copie também a pasta "dados" para dentro da pasta do
+     sistema, ANTES de abrir.
+  4. Dê dois cliques em iniciar.bat (precisa de internet na primeira vez).
+  USE UM COMPUTADOR SÓ COMO SERVIDOR. Se abrir o sistema em duas máquinas, cada
+  uma terá o seu próprio banco e as vendas ficarão separadas.
+
+  Alternativa sem instalar o Node.js: use o arquivo Emporio-Cachoeira.exe
+  (zip "Emporio-Cachoeira-Windows"). O Windows pode avisar "editor desconhecido":
+  clique em "Mais informações" e depois em "Executar assim mesmo".
+
+
+--------------------------------------------------------------------------------
+8. PROBLEMAS COMUNS E SOLUÇÕES
+--------------------------------------------------------------------------------
+"node não é reconhecido como comando"
+   -> Instale o Node.js e REINICIE o computador. Tente de novo.
+
+"Porta 3000 em uso" / "O sistema já está aberto"
+   -> O sistema já está aberto em outra janela preta. Use a que já está aberta.
+
+A página não abre em localhost:3000
+   -> Confira se a janela preta está aberta e sem mensagem de erro.
+
+Não abre no celular
+   -> Mesmo Wi-Fi? Endereço digitado igual ao da janela preta? Firewall liberado
+      em "Redes particulares"? Computador ligado com o sistema aberto?
+
+O PDF não baixa ou não abre
+   -> Procure na pasta Downloads. Se o navegador bloqueou, permita downloads
+      deste site. Se aparecer aviso de erro na tela, anote o texto.
+
+As letras ficam diferentes/mais simples
+   -> Normal sem internet (as fontes decorativas vêm da internet). Funciona igual.
+
+"Os dados sumiram"
+   -> Calma. Confira se está abrindo o iniciar.bat da MESMA pasta de sempre e do
+      MESMO computador. Veja se dados\restaurante.db existe. Se não, restaure
+      o backup (item 5).
+
+Esqueci a senha
+   -> Feche o sistema e dê dois cliques em resetar-senha.bat. Depois crie outra senha
+      na aba Ajustes.
+
+Venda registrada errada
+   -> Aba Excluir.
+
+
+--------------------------------------------------------------------------------
+9. CUIDADOS IMPORTANTES
+--------------------------------------------------------------------------------
+  - NUNCA apague nem substitua a pasta "dados" sem ter uma cópia.
+  - Se receber uma versão nova do sistema, copie os arquivos novos para a pasta
+    do sistema, mas MANTENHA a pasta "dados" como está.
+  - Faça backup toda semana (item 5).
+  - NÃO existe senha: quem estiver conectado ao Wi-Fi do restaurante consegue
+    abrir o sistema. Deixe o Wi-Fi dos clientes em uma rede separada de visitantes
+    e não compartilhe a senha do Wi-Fi interno.
+  - O sistema carrega só os meses recentes (atual e anterior) e busca os mais antigos
+    quando você os escolhe, então continua rápido mesmo com anos de vendas.
+  - Mantenha o computador com data e hora corretas: as vendas são gravadas com a
+    data do relógio do computador.
+  - A virada do dia é à meia-noite, a menos que você configure outra hora em Ajustes.
+    Uma mesa que fecha depois da virada conta como venda do dia seguinte.
+
+
+--------------------------------------------------------------------------------
+10. ARQUIVOS DA PASTA DO SISTEMA
+--------------------------------------------------------------------------------
+  iniciar.bat            Abre o sistema (dois cliques).
+  resetar-senha.bat      Remove a senha esquecida (feche o sistema antes).
+  server.js              O programa (servidor e banco de dados).
+  public\index.html      A tela do sistema (visual, abas, PDF, logo).
+  public\jspdf.min.js    Gerador de PDF (funciona sem internet).
+  lib\sql-wasm.wasm      Motor do banco de dados SQLite.
+  package.json           Lista do que o programa precisa.
+  node_modules\          Criada sozinha na primeira vez (pode ser grande).
+  dados\                 SEUS DADOS (banco e backups). A mais importante!
+  LEIA-ME.txt            Instruções rápidas.
+  DOCUMENTACAO-DO-SISTEMA.txt   Este arquivo.
+
+O banco de dados (SQLite) tem estas tabelas:
+  estado        cardápio, estoque, mesas (e quais existem) e hora de virada do dia
+  config        senha de acesso (guardada embaralhada, nunca em texto)
+  vendas        cada venda (data/hora, mesa, forma de pagamento, total, valor recebido)
+  venda_itens   os itens de cada venda (produto, quantidade, preço)
+Dá para abrir restaurante.db em programas como o "DB Browser for SQLite".
+
+
+--------------------------------------------------------------------------------
+11. COMO MUDAR NOME OU CNPJ DO CUPOM
+--------------------------------------------------------------------------------
+  1. Feche o sistema.
+  2. Faça uma cópia do arquivo public\index.html (por segurança).
+  3. Abra o public\index.html com o Bloco de Notas.
+  4. Pressione Ctrl+F e procure:  EMPÓRIO RESTAURANTE CACHOEIRA
+     Troque o texto entre aspas e ajuste, se houver, o CNPJ na linha seguinte
+     (procure por  CNPJ:  ).
+  5. Salve, abra o sistema de novo e gere um PDF de teste.
+  (O nome no topo da página - "Empório Cachoeira do Salto" - fica em outro ponto
+  do mesmo arquivo.)
+
+
+--------------------------------------------------------------------------------
+12. O QUE FOI FEITO ATÉ AGORA (HISTÓRICO)
+--------------------------------------------------------------------------------
+  1. Primeira versão (protótipo): mesas, pedidos, estoque, caixa, registro de
+     pagamento como informação e conferência para impressão.
+  2. Salvamento online dentro do Claude e planilha (CSV) por mês, para
+     conferência mensal.
+  3. Visual novo com a logo e o nome do Empório, aba Início com resumo do dia.
+  4. Cupom e conferência em PDF no tamanho de bobina (80 mm), com reimpressão
+     pela aba Caixa.
+  5. Aba Excluir (venda feita por engano, com opção de devolver ao estoque) e
+     janelas de confirmação próprias (as do navegador estavam bloqueadas).
+  6. Nome "Empório Restaurante Cachoeira" e CNPJ no cabeçalho do cupom.
+  7. Versão com BANCO DE DADOS PRÓPRIO (SQLite), em servidor local (Node.js),
+     com backup diário automático, acesso por outros aparelhos pelo Wi-Fi, e
+     opção de programa .exe. Esta é a versão que você está usando agora.
+
+  8. Atualização grande: botão para remover mesas; abas separadas de Cardápio e
+     Estoque (com entrada de mercadoria); senha de acesso (PIN); fechamento de caixa
+     por dia (com conferência do dinheiro e PDF); carregamento só dos meses
+     recentes, com busca dos antigos sob demanda; hora de virada do dia.
+  9. Senha só nas partes financeiras (Caixa, Fechamento do dia e Excluir); demais
+     abas livres. Em Ajustes, o "Dia de trabalho" passou a mostrar a data e a hora
+     do computador.
+ 10. Sistema de troco: ao pagar em dinheiro, informa-se o valor recebido; o sistema
+     calcula o troco, mostra na tela, imprime no cupom e guarda no banco (o banco
+     antigo é atualizado sozinho, sem perder dados).
+
+  Observação: a versão de teste dentro do Claude é separada. Os dados dela NÃO
+  passam para este sistema.
+
+
+--------------------------------------------------------------------------------
+13. O QUE O SISTEMA AINDA NÃO FAZ / IDEIAS PARA O FUTURO
+--------------------------------------------------------------------------------
+AINDA NÃO FAZ:
+  - Emitir NOTA FISCAL (NFC-e). Para isso é preciso certificado digital,
+    credenciamento na SEFAZ e, em geral, uma API de emissão fiscal.
+    Combine antes com o contador do restaurante.
+  - Cobrar o cliente (pagamento é feito na maquininha).
+  - Senha individual por funcionário (hoje existe uma senha única, a do dono).
+  - Tela da cozinha, delivery e controle de insumos por receita (ficha técnica).
+
+IDEIAS PARA OS PRÓXIMOS PASSOS:
+  - Cópia automática do banco para o Google Drive ou pendrive.
+  - Emissão de nota fiscal (NFC-e) integrada.
+  - Tela da cozinha para acompanhar os pedidos.
+
+
+================================================================================
+  Dúvida ou problema? Anote a mensagem que apareceu na tela e o que você estava
+  fazendo, e peça ajuda com essas informações.
+================================================================================
