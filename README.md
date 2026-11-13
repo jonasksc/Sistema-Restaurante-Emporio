@@ -53,8 +53,6 @@ Seu foco é simplificar rotinas de gestão, com atenção especial a **vendas** 
 
 Os dados são mantidos em um banco **SQLite** local. Como o sistema ainda opera em um único computador, esta versão não deve ser apresentada como uma solução multiusuário em rede.
 
-**Importante:** antes de publicar o repositório, remova dados reais de clientes e informações confidenciais. Não envie arquivos `.env`, credenciais ou cópias do banco de produção para o GitHub.
-
 ## 🔜 Melhorias consideradas para próximas versões
 
 Estas são **possibilidades de evolução**, e não funcionalidades já implementadas:
@@ -63,10 +61,6 @@ Estas são **possibilidades de evolução**, e não funcionalidades já implemen
 - Aperfeiçoamento de relatórios de gestão.
 - Melhorias na instalação e distribuição do sistema para Windows.
 - Revisão de segurança, permissões e tratamento de erros.
-
-## 📷 Demonstração
-
-*Adicione aqui capturas de tela das principais áreas do sistema, como vendas e estoque, sem expor informações reais de clientes.*
 
 ## 📚 Aprendizados
 
