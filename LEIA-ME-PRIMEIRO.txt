@@ -1,0 +1,235 @@
+EMPÓRIO CACHOEIRA — GUIA DE INSTALAÇÃO E USO
+===============================================
+
+Este é um sistema local para gestão de restaurante, com mesas, pedidos,
+identificação por nome do cliente, produtos, estoque, vendas, contas pendentes, caixa,
+relatórios, comprovantes em PDF e controle de usuários. As abas Cozinha
+e Ficha Técnica foram ocultadas conforme solicitado.
+
+INICIAR O SISTEMA: iniciar.bat
+RECUPERAR PIN DO ADMINISTRADOR: resetar-senha.bat
+ARQUIVO ÚNICO DE INSTRUÇÕES: LEIA-ME-PRIMEIRO.txt (este arquivo)
+
+0. DIAGNOSTICO AUTOMATICO NA ABERTURA
+-----------------------------------
+Ao dar dois cliques em iniciar.bat, o programa verifica e mostra na janela:
+  [OK] Node.js: versao compativel
+  [OK] Interface: arquivos presentes
+  [OK] Servidor: arquivos do sistema presentes
+  [OK] SQLite: biblioteca funcionando
+  [OK] Pasta de dados: leitura e escrita disponiveis
+  [OK] Banco de dados: integridade verificada
+  [OK] Sistema: API respondendo
+  [OK] Interface web: pagina inicial respondendo
+  [OK] Geracao de PDF: biblioteca disponivel
+  [OK] Servidor ativo na porta indicada
+
+[AVISO] indica uma condicao a considerar (por exemplo, banco de dados novo
+no primeiro uso ou Wi-Fi ainda nao liberado ate configurar o PIN).
+[ERRO] indica verificacao reprovada: o iniciador informa o problema e,
+quando nao e seguro continuar, interrompe a abertura.
+
+O registro de falhas fica em dados\diagnostico-inicializacao.log.
+Nenhum teste de diagnostico apaga vendas, usuarios, estoque ou comandas.
+A verificacao de integridade do SQLite e feita sobre uma copia em memoria.
+O programa so imprime que a interface esta OK depois de receber HTTP 200
+na pagina inicial; isso nao garante que o navegador abriu automaticamente.
+O status da rede confirma que o servidor esta escutando, nao que o
+firewall do Windows ou o roteador permitem conexao pelo celular.
+
+Caso o erro seja na porta, feche outras instancias ou verifique pelo CMD:
+  netstat -ano | findstr :3000
+Em erro de banco de dados, NAO apague dados\restaurante.db.
+Faca copia da pasta dados e procure ajuda para recuperar o arquivo.
+Para validar as funcionalidades apos abrir, use o sistema normalmente.
+
+1. PRIMEIRA INSTALAÇÃO
+----------------------
+1) Extraia TODO o arquivo ZIP com WinRAR ou Explorador do Windows.
+2) Salve a pasta do Empório em um local do computador, de preferência
+   fora de pastas sincronizadas pelo OneDrive, Google Drive ou Dropbox.
+3) Abra a pasta "Sistema Emporio Cachoeira" e clique duas vezes em
+   iniciar.bat. Não execute diretamente de dentro do ZIP.
+4) Se o Node.js não estiver instalado, o iniciador oferecerá o instalador
+   offline node-runtime.msi. Autorize somente se confiar no pacote.
+5) Aguarde a mensagem de inicialização; o navegador padrão deve abrir
+   automaticamente. Se não abrir, copie o endereço local mostrado na janela,
+   normalmente http://127.0.0.1:3000/ (ou :3001, :3002 etc.).
+6) NÃO feche a janela preta durante o atendimento. Para desligar, use
+   Ctrl+C nela ou feche-a após terminar as operações.
+
+2. LOGIN E PRIMEIRO PIN
+-----------------------
+- No primeiro acesso, use a opção Administrador para configurar um PIN
+  de exatamente 4 dígitos, no computador principal.
+- Depois de cadastrar o PIN, feche a janela do sistema e abra novamente
+  iniciar.bat. Esse reinício libera o modo Wi-Fi automaticamente.
+- Na aba Funcionários, o administrador pode cadastrar, trocar PIN, desativar
+  ou EXCLUIR uma conta de funcionário. Ao excluir, a conta não pode mais
+  entrar, inclusive pelo Wi-Fi. A exclusão pede confirmação e fica registrada
+  na auditoria; vendas e movimentações anteriores não são removidas.
+- Na aba Funcionários, o administrador cadastra um usuário e PIN de 4
+  dígitos para cada funcionário, definindo o perfil adequado.
+- O garçom utiliza a opção Funcionário, com seu usuário e PIN, para
+  registrar pedidos nas mesas. Operações administrativas são restritas.
+- Contas antigas podem continuar com senhas anteriores até que sejam
+  alteradas pelo administrador.
+- Evite PINs fáceis, como 0000, 1234 ou ano de nascimento. Nunca compartilhe
+  o PIN do administrador. Há bloqueio temporário após várias tentativas.
+
+3. MESAS, COMANDAS E PEDIDOS
+----------------------------
+- Use o número da mesa e, se desejar, o nome do cliente na mesma comanda.
+- Os garçons podem adicionar pedidos a partir do celular, no mesmo Wi-Fi.
+- O computador principal mantém o banco de dados; os aparelhos acessam
+  o mesmo servidor, não cópias diferentes do sistema.
+- As telas consultam atualizações periodicamente (cerca de 3 segundos);
+  os pedidos registrados devem aparecer no computador pouco depois.
+- O fechamento da conta é reservado aos perfis autorizados.
+
+4. CONTAS PENDENTES — PAGAR DEPOIS
+---------------------------------------
+- Na aba Mesas, selecione a mesa e informe o nome do cliente.
+- Adicione os pedidos normalmente e, na forma de pagamento, selecione
+  "Pagar depois".
+- Confirme. A mesa fica livre, os produtos saem do estoque, mas
+  nenhum valor entra no caixa nem no faturamento recebido naquele dia.
+- Na nova aba "Contas pendentes" (administrador ou gerente), são
+  listados: cliente, mesa, itens, data de abertura e valor devido.
+- Quando o cliente pagar, selecione a forma de pagamento (Dinheiro,
+  Pix, Cartão de crédito ou Cartão de débito).
+- Para DINHEIRO, informe quanto o cliente entregou. O sistema calcula e
+  mostra o TROCO antes de confirmar o recebimento. Use VALOR EXATO ou
+  os botões R$ 10, R$ 20, R$ 50 e R$ 100 para agilizar. O caixa registra apenas
+  o valor da conta (valor entregue MENOS troco), sem contar troco como venda.
+- Para Pix ou cartão, basta confirmar o recebimento.
+- Nas MESAS, ao escolher Dinheiro, também informe o valor entregue
+  (ou clique em Valor exato) para calcular o troco antes da venda.
+- O valor passa a aparecer no Caixa e no Fechamento do dia/mês da data
+  do RECEBIMENTO, inclusive se a conta tiver sido aberta em outro mês.
+- O sistema registra a data original da conta e a data do pagamento.
+- Cada conta pendente deve ser quitada INTEGRALMENTE numa única operação.
+  Pagamentos parciais ainda não são suportados.
+- O relatório de Fechamento do dia e o Caixa do mês refletem o dinheiro
+  líquido recebido: quantia entregue menos troco. O troco NÃO é descontado
+  novamente do valor da venda, para evitar reduzir o faturamento duas vezes.
+- As seções "Conferência do dinheiro da gaveta" e "Movimentos e fechamento
+  de caixa" foram retiradas da interface conforme solicitado. Continuam
+  disponíveis os relatórios do Caixa mensal e Fechamento do dia em PDF.
+  Os registros históricos de movimentos/fechamentos antigos permanecem
+  preservados no banco de dados.
+- A opção "Misto" foi REMOVIDA dos novos pagamentos. Vendas antigas
+  registradas como "Misto" permanecem no histórico sem alterações.
+- Os garçons continuam apenas registrando pedidos; receber contas e
+  fechar vendas exige administrador ou gerente.
+
+5. COMO ACESSAR PELO CELULAR, NO MESMO WI-FI
+--------------------------------------------
+1) Ligue o computador principal e execute iniciar.bat.
+2) Verifique o endereço impresso em "ENDERECO PARA ACESSAR PELO CELULAR".
+   Exemplo ilustrativo: http://192.168.1.50:3000/
+   Se a porta 3000 estiver ocupada, pode aparecer :3001 até :3009.
+3) Conecte o celular ao MESMO roteador/rede Wi-Fi do computador, sem usar
+   rede de convidados, dados móveis ou VPN.
+4) No navegador do celular, DIGITE o endereço IP completo mostrado na
+   janela do computador, inclusive a porta.
+5) Entre em Funcionário usando o usuário e PIN próprios.
+
+ATENÇÃO: localhost e 127.0.0.1 no CELULAR referem-se ao próprio telefone.
+Eles não permitem acessar o servidor que está rodando no computador.
+
+6. SE O WI-FI NÃO FUNCIONAR
+--------------------------
+- Confira se o sistema já tem um PIN de administrador e foi reiniciado.
+  Antes do primeiro PIN, ele só atende conexões do próprio computador.
+- Consulte o IPv4 do Wi-Fi pelo CMD com: ipconfig
+- Confira o perfil da conexão em Configurações do Windows > Rede e Internet:
+  o Wi-Fi deve estar como rede PRIVADA, se for um ambiente confiável.
+- Verifique se o roteador não usa "isolamento de clientes" ou "rede de
+  convidados". Isso pode bloquear a comunicação entre celular e PC.
+- Libere o acesso do Node.js no Firewall do Windows, apenas para a rede
+  privada e confiável. Se precisar, veja a opção técnica abaixo.
+- Teste no computador http://SEU-IP:PORTA/api/saude (substituindo pelo IPv4
+  e porta exibidos). Deve retornar uma resposta contendo "ok":true.
+- Os endereços podem mudar se o roteador atribuir outro IP ou se outra
+  aplicação ocupar a porta 3000. Use sempre o endereço da janela.
+
+DIAGNÓSTICO E FIREWALL NO MESMO iniciar.bat:
+1) Abra a pasta do programa pelo Explorador de Arquivos.
+2) Clique na barra de endereço, digite cmd e pressione Enter.
+3) Digite: iniciar.bat diagnostico
+   Isso mostra o IPv4, o perfil da rede e quais portas estão ocupadas.
+4) Se precisar liberar a porta no Firewall de uma rede PRIVADA, digite:
+   iniciar.bat firewall
+   Leia o aviso e CONFIRME antes de permitir elevação de privilégios.
+   Essa regra é limitada às portas TCP 3000–3009, perfil privado e
+   dispositivos da mesma sub-rede. NÃO use em Wi-Fi público.
+5) Se o Firewall de terceiros ou antivírus bloquear a conexão, ajuste
+   a permissão no próprio software, sem desligar a proteção inteira.
+
+7. BANCO DE DADOS, BACKUP E ATUALIZAÇÕES
+---------------------------------------
+- O arquivo principal é: dados\restaurante.db
+- O sistema faz backups locais em: dados\backups
+- Pelo perfil Administrador também é possível exportar um backup.
+- Faça cópias adicionais para pen drive/HD externo em local seguro.
+- Para copiar manualmente toda a pasta "dados", feche primeiro o sistema.
+- Nunca substitua um banco de dados mais recente pelo arquivo de exemplo
+  que vem dentro de um novo ZIP; isso pode apagar vendas e cadastros.
+- Teste versões novas numa pasta separada antes de substituir o programa.
+- Evite manter o banco ativo dentro de pastas sincronizadas (OneDrive etc.).
+- Se quiser mover o sistema, desligue-o, copie a pasta completa e depois
+  confira os dados antes de usar novamente.
+
+8. SE ESQUECEU O PIN DE ADMINISTRADOR
+-------------------------------------
+A recuperação deve ser feita SOMENTE no computador principal:
+1) Feche todas as janelas do Empório e faça backup da pasta "dados".
+2) Abra a pasta do programa, clique na barra de endereço, digite cmd e
+   pressione Enter.
+3) Digite: iniciar.bat recuperar
+4) Leia o aviso e digite RECUPERAR para confirmar a ação.
+5) A ferramenta limpa o PIN do administrador, sem apagar vendas, e cria
+   um backup local. Depois execute iniciar.bat e cadastre o novo PIN.
+6) O Wi-Fi só fica disponível depois de cadastrar o PIN e reiniciar.
+
+9. SOLUÇÃO DE PROBLEMAS COMUNS
+------------------------------
+- "Porta 3000 em uso": o iniciador procura automaticamente da 3001 até
+  a 3009. Se uma versão antiga do Empório estiver aberta, feche-a antes.
+- "Não encontra o caminho especificado": extraia novamente TODO o ZIP
+  e execute iniciar.bat dentro da pasta extraída.
+- Navegador não abre: abra manualmente o endereço local exibido no CMD.
+- "Node.js não encontrado": aceite a instalação offline oferecida pelo
+  iniciador, feche a janela e tente novamente.
+- "Sistema já está em execução": utilize a janela existente; não abra
+  duas cópias compartilhando a mesma pasta de dados.
+- Se uma atualização não mostrar as telas novas, atualize o navegador
+  com Ctrl+F5, sem apagar dados da pasta "dados".
+- Se aparecer um erro não listado, anote a mensagem ou envie uma foto.
+
+10. CUIDADOS DE SEGURANÇA
+------------------------
+- Use apenas redes locais privadas e confiáveis; evite Wi-Fi público.
+- NÃO configure redirecionamento de portas no roteador para acesso pela
+  internet. Este sistema não foi preparado para acesso público externo.
+- PIN de 4 dígitos é prático, mas menos seguro que senhas longas.
+- Proteja o computador principal e mantenha backups em local separado.
+- Verifique as operações com dados fictícios antes de usar em produção.
+- O programa abre no navegador; ainda não é um aplicativo Electron .exe.
+
+11. APARÊNCIA FIXA EM TODOS OS DISPOSITIVOS
+------------------------------------------
+- O tema oficial do Empório é sempre marrom-escuro, dourado e amarelo,
+  como na tela inicial do restaurante.
+- Isso NÃO depende de modo claro/escuro do Windows, Chrome, Edge ou celular.
+- A mudança afeta apenas as cores, não login, estoque, caixa ou vendas.
+- O nome do cliente nas mesas fica BRANCO quando a mesa não está
+  selecionada e MARROM-ESCURO quando está selecionada (fundo amarelo).
+- Documentos de impressão podem manter fundo branco para economizar tinta.
+- Após atualizar, abra esta versão do sistema e pressione Ctrl+Shift+R
+  (ou Ctrl+F5) para atualizar o cache do navegador, se necessário.
+- Em outro computador, confirme que está acessando o IP/porta do
+  computador onde esta versão atualizada está sendo executada.
+
+FIM DO GUIA — Para uso diário, basta clicar duas vezes em iniciar.bat.
